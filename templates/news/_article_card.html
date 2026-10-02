@@ -1,0 +1,20 @@
+{# Reusable card for one article. Expects an "article" variable. #}
+<article class="card">
+  {% if article.featured_image %}
+    <a href="{% url 'news:article_detail' article.slug %}">
+      <img src="{{ article.featured_image.url }}" alt="{{ article.title }}">
+    </a>
+  {% endif %}
+  <div class="card-body">
+    <h2><a href="{% url 'news:article_detail' article.slug %}">{{ article.title }}</a></h2>
+    <p class="meta">
+      {{ article.published_at|date:"j \d\e F \d\e Y" }} · {{ article.author.name }}
+    </p>
+    <p>{{ article.summary|truncatewords:20 }}</p>
+    <p class="tags">
+      {% for category in article.categories.all %}
+        <a class="tag" href="{% url 'news:category_detail' category.slug %}">{{ category.name }}</a>
+      {% endfor %}
+    </p>
+  </div>
+</article>

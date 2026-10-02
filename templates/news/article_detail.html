@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ article.title }} · Portal de Noticias{% endblock %}
+
+{% block content %}
+  <article class="detail">
+    <h1>{{ article.title }}</h1>
+    <p class="meta">
+      Publicado el {{ article.published_at|date:"j \d\e F \d\e Y, H:i" }} por {{ article.author.name }}
+    </p>
+    {% if article.featured_image %}
+      <img class="hero" src="{{ article.featured_image.url }}" alt="{{ article.title }}">
+    {% endif %}
+    <p class="lead">{{ article.summary }}</p>
+    {# Auto-escaping stays on: the body is never marked as safe. #}
+    <div class="body">{{ article.body|linebreaks }}</div>
+    <p class="tags">
+      {% for category in article.categories.all %}
+        <a class="tag" href="{% url 'news:category_detail' category.slug %}">{{ category.name }}</a>
+      {% endfor %}
+    </p>
+  </article>
+  <p><a href="{% url 'news:home' %}">&larr; Volver a la portada</a></p>
+{% endblock %}
+
+{% block sidebar %}
+  <h2>Sobre el autor</h2>
+  <p><strong>{{ article.author.name }}</strong></p>
+  {% if article.author.bio %}<p>{{ article.author.bio }}</p>{% endif %}
+  {{ block.super }}
+{% endblock %}
